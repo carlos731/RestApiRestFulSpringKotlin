@@ -51,6 +51,19 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!--Dependências para Migrations-->
+		<!-- Comando no terminal para gerar migrations: mvn clean package spring-boot:run -DskipTests -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+		<!--Dependências para Migrations-->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -113,6 +126,15 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<configuration>
+					<url>jdbc:mysql://localhost:3306/rest_spring_boot_kotlin?useTimezone=true&amp;serverTimezone=UTC&amp;useSSL=false</url>
+					<user>root</user>
+					<password>1234</password>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
