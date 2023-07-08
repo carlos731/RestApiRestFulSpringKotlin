@@ -1,6 +1,6 @@
 package br.com.api.controller
 
-import br.com.api.model.Person
+import br.com.api.data.vo.v1.PersonVO
 import br.com.api.services.PersonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -21,7 +21,7 @@ class PersonController {
     @GetMapping(
         //method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun findAll(): List<Person> {
+    fun findAll(): List<PersonVO> {
         return service.findAll()
     }
 
@@ -29,7 +29,7 @@ class PersonController {
         value = ["/{id}"],
         //method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun findById(@PathVariable(value = "id") id: Long): Person {
+    fun findById(@PathVariable(value = "id") id: Long): PersonVO {
         return service.findById(id)
     }
 
@@ -38,8 +38,8 @@ class PersonController {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun create(@RequestBody person: Person): Person {
-        return service.create(person)
+    fun create(@RequestBody personVO: PersonVO): PersonVO {
+        return service.create(personVO)
     }
 
     @PutMapping(
@@ -47,8 +47,8 @@ class PersonController {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun update(@RequestBody person: Person): Person {
-        return service.update(person)
+    fun update(@RequestBody personVO: PersonVO): PersonVO {
+        return service.update(personVO)
     }
 
     @DeleteMapping(
