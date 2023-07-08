@@ -1,8 +1,10 @@
 package br.com.api.services
 
 import br.com.api.data.vo.v1.PersonVO
+import br.com.api.data.vo.v2.PersonVO as PersonVOV2
 import br.com.api.exceptions.ResourceNotFoundException
 import br.com.api.mapper.DozerMapper
+import br.com.api.mapper.custom.PersonMapper
 import br.com.api.model.Person
 import br.com.api.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,6 +17,9 @@ class PersonService {
 
     @Autowired
     private lateinit var repository: PersonRepository
+
+    @Autowired
+    private lateinit var mapper: PersonMapper
 
     private val logger = Logger.getLogger(PersonService::class.java.name)
 
@@ -35,6 +40,12 @@ class PersonService {
         logger.info("Creating one PersonVO with name ${personVO.firstName}!")
         var entity: Person = DozerMapper.parseObject(personVO, Person::class.java)
         return DozerMapper.parseObject(repository.save(entity), PersonVO::class.java) // Salva e converte para personVO para retornar reposta
+    }
+
+    fun createV2(personVO: PersonVOV2) : PersonVOV2{
+        logger.info("Creating one PersonVO with name ${personVO.firstName}!")
+        var entity: Person = mapper.mapVOToEntity(personVO)
+        return mapper.mapEntityToVO(repository.save(entity)) // Salva e converte para personVO para retornar reposta
     }
 
     fun update(personVO: PersonVO) : PersonVO {
