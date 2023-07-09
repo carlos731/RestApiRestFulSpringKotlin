@@ -3,14 +3,14 @@ package br.com.api.controller
 import br.com.api.data.vo.v1.PersonVO
 import br.com.api.data.vo.v2.PersonVO as PersonVOV2
 import br.com.api.services.PersonService
+import br.com.api.util.MediaType
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.atomic.AtomicLong
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person/v1")
 class PersonController {
 
     val counter: AtomicLong = AtomicLong()
@@ -21,7 +21,8 @@ class PersonController {
 
     @GetMapping(
         //method = [RequestMethod.GET],
-        produces = [MediaType.APPLICATION_JSON_VALUE])
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
+    )
     fun findAll(): List<PersonVO> {
         return service.findAll()
     }
@@ -29,15 +30,15 @@ class PersonController {
     @GetMapping(
         value = ["/{id}"],
         //method = [RequestMethod.GET],
-        produces = [MediaType.APPLICATION_JSON_VALUE])
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
     fun findById(@PathVariable(value = "id") id: Long): PersonVO {
         return service.findById(id)
     }
 
     @PostMapping(
         //method = [RequestMethod.POST],
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
+        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     fun create(@RequestBody personVO: PersonVO): PersonVO {
         return service.create(personVO)
@@ -46,8 +47,8 @@ class PersonController {
     @PostMapping(
         value = ["/v2"],
         //method = [RequestMethod.POST],
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
+        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     fun createV2(@RequestBody personVO: PersonVOV2): PersonVOV2 {
         return service.createV2(personVO)
@@ -55,8 +56,8 @@ class PersonController {
 
     @PutMapping(
         //method = [RequestMethod.PUT],
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
+        consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     fun update(@RequestBody personVO: PersonVO): PersonVO {
         return service.update(personVO)
@@ -65,7 +66,7 @@ class PersonController {
     @DeleteMapping(
         //method = [RequestMethod.DELETE],
         value = ["/{id}"],
-        produces = [MediaType.APPLICATION_JSON_VALUE]
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     fun delete(@PathVariable(value = "id") id: Long) : ResponseEntity<*>{
         service.delete(id)
