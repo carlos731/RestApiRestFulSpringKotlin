@@ -1,5 +1,7 @@
 package br.com.api.mapper
 
+import com.github.dozermapper.core.DozerBeanMapperBuilder
+import com.github.dozermapper.core.Mapper
 import org.modelmapper.ModelMapper
 
 object DozerMapper {
