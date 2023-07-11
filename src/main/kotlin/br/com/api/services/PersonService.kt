@@ -2,6 +2,7 @@ package br.com.api.services
 
 import br.com.api.controller.PersonController
 import br.com.api.data.vo.v1.PersonVO
+import br.com.api.exceptions.RequiredObjectIsNullException
 import br.com.api.data.vo.v2.PersonVO as PersonVOV2
 import br.com.api.exceptions.ResourceNotFoundException
 import br.com.api.mapper.DozerMapper
@@ -46,7 +47,8 @@ class PersonService {
         return personVO
     }
 
-    fun create(person: PersonVO) : PersonVO{
+    fun create(person: PersonVO?) : PersonVO{
+        if(person == null) throw RequiredObjectIsNullException()
         logger.info("Creating one PersonVO with name ${person.firstName}!")
         var entity: Person = DozerMapper.parseObject(person, Person::class.java)
         val personVO: PersonVO = DozerMapper.parseObject(repository.save(entity), PersonVO::class.java) // Salva e converte para personVO para retornar reposta
@@ -61,7 +63,9 @@ class PersonService {
         return mapper.mapEntityToVO(repository.save(entity)) // Salva e converte para personVO para retornar reposta
     }
 
-    fun update(personVO: PersonVO) : PersonVO {
+    fun update(personVO: PersonVO?) : PersonVO {
+        if(personVO == null) throw RequiredObjectIsNullException()
+
         logger.info("Updating one PersonVO with id ${personVO.id}!")
 
         var entity = repository.findById(personVO.id)
