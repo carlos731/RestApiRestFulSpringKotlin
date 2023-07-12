@@ -1,9 +1,9 @@
-package br.com.api.mockito.services
+package br.com.api.unittests.mockito.services
 
 import br.com.api.exceptions.RequiredObjectIsNullException
 import br.com.api.repository.PersonRepository
 import br.com.api.services.PersonService
-import br.com.erudio.unittests.mapper.mocks.MockPerson
+import br.com.api.unittests.mocks.MockPerson
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

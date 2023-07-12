@@ -1,4 +1,4 @@
-package br.com.erudio.unittests.mapper.mocks
+package br.com.api.unittests.mocks
 
 import br.com.api.data.vo.v1.PersonVO
 import br.com.api.model.Person

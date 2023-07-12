@@ -1,8 +1,7 @@
 package br.com.api.controller
 
-import br.com.api.data.vo.v1.PersonVO
-import br.com.api.data.vo.v2.PersonVO as PersonVOV2
-import br.com.api.services.PersonService
+import br.com.api.data.vo.v1.BookVO
+import br.com.api.services.BookService
 import br.com.api.util.MediaType
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
@@ -15,32 +14,31 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.atomic.AtomicLong
 
-//@CrossOrigin
 @RestController
-@RequestMapping("/api/person/v1")
-@Tag(name = "People", description = "Endpoints for mapping People")
-class PersonController {
+@RequestMapping("/api/book/v1")
+@Tag(name = "Books", description = "Endpoints for mapping Books")
+class BookController {
 
     val counter: AtomicLong = AtomicLong()
 
     @Autowired
-    private lateinit var service: PersonService
-    //var service: PersonService = PersonService() // Igual ao código de cima so que não precisa mais.
+    private lateinit var service: BookService
+    //var service: BookService = BookService() // Igual ao código de cima so que não precisa mais.
 
     @GetMapping(
         //method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     @Operation(
-        summary = "Finds all People",
-        description = "Recupera todas as pessoas do banco.",
-        tags = ["People"],
+        summary = "Finds all Books",
+        description = "Recupera todas as Livros do banco.",
+        tags = ["Books"],
         responses = [
             ApiResponse(
                 description = "Success",
                 responseCode = "200",
                 content = [
-                    Content(array = ArraySchema(schema = Schema(implementation = PersonVO::class)))
+                    Content(array = ArraySchema(schema = Schema(implementation = BookVO::class)))
                 ],
             ),
             ApiResponse(
@@ -80,25 +78,24 @@ class PersonController {
             ),
         ]
     )
-    fun findAll(): List<PersonVO> {
+    fun findAll(): List<BookVO> {
         return service.findAll()
     }
 
-    //@CrossOrigin(origins = ["http://localhost:8080"])
     @GetMapping(
         value = ["/{id}"],
         //method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML])
     @Operation(
-        summary = "Finds a Person",
-        description = "Recupera uma pessoas do banco através do ID.",
-        tags = ["People"],
+        summary = "Finds a Book",
+        description = "Recupera uma Livros do banco através do ID.",
+        tags = ["Books"],
         responses = [
             ApiResponse(
                 description = "Success",
                 responseCode = "200",
                 content = [
-                    Content(schema = Schema(implementation = PersonVO::class))
+                    Content(schema = Schema(implementation = BookVO::class))
                 ],
             ),
             ApiResponse(
@@ -138,26 +135,25 @@ class PersonController {
             ),
         ]
     )
-    fun findById(@PathVariable(value = "id") id: Long): PersonVO {
+    fun findById(@PathVariable(value = "id") id: Long): BookVO {
         return service.findById(id)
     }
 
-    //@CrossOrigin(origins = ["http://localhost:8080", "https://carlos.com.br"])
     @PostMapping(
         //method = [RequestMethod.POST],
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     @Operation(
-        summary = "Adds a new Person",
-        description = "Cadastra uma pessoas no banco através do body da requisição.",
-        tags = ["People"],
+        summary = "Adds a new Book",
+        description = "Cadastra uma Livros no banco através do body da requisição.",
+        tags = ["Books"],
         responses = [
             ApiResponse(
                 description = "Success",
                 responseCode = "200",
                 content = [
-                    Content(schema = Schema(implementation = PersonVO::class))
+                    Content(schema = Schema(implementation = BookVO::class))
                 ],
             ),
             ApiResponse(
@@ -183,8 +179,8 @@ class PersonController {
             ),
         ]
     )
-    fun create(@RequestBody personVO: PersonVO): PersonVO {
-        return service.create(personVO)
+    fun create(@RequestBody bookVO: BookVO): BookVO {
+        return service.create(bookVO)
     }
 
     /*
@@ -194,8 +190,8 @@ class PersonController {
         consumes = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
-    fun createV2(@RequestBody personVO: PersonVOV2): PersonVOV2 {
-        return service.createV2(personVO)
+    fun createV2(@RequestBody bookVO: BookVOV2): BookVOV2 {
+        return service.createV2(bookVO)
     }
     */
 
@@ -205,15 +201,15 @@ class PersonController {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     @Operation(
-        summary = "Update a Person's information",
-        description = "Atualiza os dados de uma pessoa no banco através do ID.",
-        tags = ["People"],
+        summary = "Update a Book's information",
+        description = "Atualiza os dados de uma livro no banco através do ID.",
+        tags = ["Books"],
         responses = [
             ApiResponse(
                 description = "Success",
                 responseCode = "200",
                 content = [
-                    Content(schema = Schema(implementation = PersonVO::class))
+                    Content(schema = Schema(implementation = BookVO::class))
                 ],
             ),
             ApiResponse(
@@ -253,8 +249,8 @@ class PersonController {
             ),
         ]
     )
-    fun update(@RequestBody personVO: PersonVO): PersonVO {
-        return service.update(personVO)
+    fun update(@RequestBody bookVO: BookVO): BookVO {
+        return service.update(bookVO)
     }
 
     @DeleteMapping(
@@ -263,9 +259,9 @@ class PersonController {
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
     )
     @Operation(
-        summary = "Deletes a Person",
-        description = "Deleta uma pessoas do banco através do ID.",
-        tags = ["People"],
+        summary = "Deletes a Book",
+        description = "Deleta uma Livros do banco através do ID.",
+        tags = ["Books"],
         responses = [
             ApiResponse(
                 description = "No Content",

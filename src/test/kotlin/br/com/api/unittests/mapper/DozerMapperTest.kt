@@ -6,7 +6,7 @@ import br.com.api.model.Person
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import br.com.erudio.unittests.mapper.mocks.MockPerson
+import br.com.api.unittests.mocks.MockPerson
 
 class DozerMapperTest {
 
