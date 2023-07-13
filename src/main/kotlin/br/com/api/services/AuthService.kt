@@ -47,4 +47,16 @@ class AuthService {
         }
     }
 
+    fun refreshToken(username: String, refreshToken: String): ResponseEntity<*> {
+        logger.info("Trying get refresh token to user $username")
+        val user = repository.findByUsername(username)
+        val tokenResponse: TokenVO = if (user != null) {
+            tokenProvider.refreshToken(refreshToken)
+        } else {
+            throw UsernameNotFoundException("Username $username not found!")
+        }
+        logger.info("refreshToken: $tokenResponse")
+        return ResponseEntity.ok(tokenResponse)
+    }
+
 }
