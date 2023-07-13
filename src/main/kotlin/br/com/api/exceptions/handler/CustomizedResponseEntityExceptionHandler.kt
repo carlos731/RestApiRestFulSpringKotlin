@@ -1,6 +1,7 @@
 package br.com.api.exceptions.handler
 
 import br.com.api.exceptions.ExceptionResponse
+import br.com.api.exceptions.InvalidJwtAuthenticationException
 import br.com.api.exceptions.RequiredObjectIsNullException
 import br.com.api.exceptions.ResourceNotFoundException
 import org.springframework.http.HttpStatus
@@ -44,6 +45,16 @@ class CustomizedResponseEntityExceptionHandler : ResponseEntityExceptionHandler(
             request.getDescription(false)
         )
         return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(InvalidJwtAuthenticationException::class)
+    fun handleInvalidJwtAuthenticationException(ex: Exception, request: WebRequest): ResponseEntity<ExceptionResponse> {
+        val exceptionResponse = ExceptionResponse(
+            Date(),
+            ex.message,
+            request.getDescription(false)
+        )
+        return ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.FORBIDDEN)
     }
 
 }
