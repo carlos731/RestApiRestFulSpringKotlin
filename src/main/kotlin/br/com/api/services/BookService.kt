@@ -2,12 +2,17 @@ package br.com.api.services
 
 import br.com.api.controller.BookController
 import br.com.api.data.vo.v1.BookVO
+import br.com.api.data.vo.v1.PersonVO
 import br.com.api.exceptions.RequiredObjectIsNullException
 import br.com.api.exceptions.ResourceNotFoundException
 import br.com.api.mapper.DozerMapper
 import br.com.api.model.Book
 import br.com.api.repository.BookRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
 import java.util.concurrent.atomic.AtomicLong
@@ -19,8 +24,12 @@ class BookService {
     @Autowired
     private lateinit var repository: BookRepository
 
+    @Autowired
+    private lateinit var assembler: PagedResourcesAssembler<BookVO>
+
     private val logger = Logger.getLogger(BookService::class.java.name)
 
+    /*
     fun findAll(): List<BookVO> {
         logger.info("Finding all books!")
         val books =  repository.findAll()
@@ -30,6 +39,15 @@ class BookService {
             book.add(withSelfRel)
         }
         return vos
+    }
+    */
+
+    fun findAll(pageable: Pageable): PagedModel<EntityModel<BookVO>> {
+        logger.info("Finding all books!")
+        val page = repository.findAll(pageable)
+        val vos = page.map { b -> DozerMapper.parseObject(b, BookVO::class.java) }
+        vos.map { p -> p.add(linkTo(BookController::class.java).slash(p.id).withSelfRel()) }
+        return assembler.toModel(vos)
     }
 
     fun findById(id: Long): BookVO {

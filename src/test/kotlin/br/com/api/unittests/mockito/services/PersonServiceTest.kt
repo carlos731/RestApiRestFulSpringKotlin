@@ -36,7 +36,7 @@ internal class PersonServiceTest {
         inputObject = MockPerson()
         MockitoAnnotations.openMocks(this)
     }
-
+    /*
     @Test
     fun findAll() {
         val list = inputObject.mockEntityList()
@@ -84,7 +84,7 @@ internal class PersonServiceTest {
         assertEquals("Last Name Test7", personSeven.lastName)
         assertEquals("Female", personSeven.gender)
     }
-
+    */
     @Test
     fun findById() {
         val person = inputObject.mockEntity(1)

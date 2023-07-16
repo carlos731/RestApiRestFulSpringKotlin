@@ -10,6 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.atomic.AtomicLong
@@ -25,6 +30,7 @@ class BookController {
     private lateinit var service: BookService
     //var service: BookService = BookService() // Igual ao código de cima so que não precisa mais.
 
+    /*
     @GetMapping(
         //method = [RequestMethod.GET],
         produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
@@ -80,6 +86,70 @@ class BookController {
     )
     fun findAll(): List<BookVO> {
         return service.findAll()
+    }
+    */
+    @GetMapping(
+        //method = [RequestMethod.GET],
+        produces = [MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YAML]
+    )
+    @Operation(
+        summary = "Finds all Books",
+        description = "Recupera todas as Livros do banco.",
+        tags = ["Books"],
+        responses = [
+            ApiResponse(
+                description = "Success",
+                responseCode = "200",
+                content = [
+                    Content(array = ArraySchema(schema = Schema(implementation = BookVO::class)))
+                ],
+            ),
+            ApiResponse(
+                description = "No Content",
+                responseCode = "204",
+                content = [
+                    Content(schema = Schema(implementation = Unit::class))
+                ],
+            ),
+            ApiResponse(
+                description = "Bad Request",
+                responseCode = "400",
+                content = [
+                    Content(schema = Schema(implementation = Unit::class))
+                ],
+            ),
+            ApiResponse(
+                description = "Unauthorized",
+                responseCode = "401",
+                content = [
+                    Content(schema = Schema(implementation = Unit::class))
+                ],
+            ),
+            ApiResponse(
+                description = "Not Found",
+                responseCode = "404",
+                content = [
+                    Content(schema = Schema(implementation = Unit::class))
+                ],
+            ),
+            ApiResponse(
+                description = "Internal Error",
+                responseCode = "500",
+                content = [
+                    Content(schema = Schema(implementation = Unit::class))
+                ],
+            ),
+        ]
+    )
+    fun findAll(
+        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "size", defaultValue = "12") size: Int,
+        @RequestParam(value = "direction", defaultValue = "asc") direction: String
+    ): ResponseEntity<PagedModel<EntityModel<BookVO>>> {
+        val sortDirection: Sort.Direction =
+            if ("desc".equals(direction, ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+        val pageable: Pageable = PageRequest.of(page, size, Sort.by(sortDirection, "title"))
+        return ResponseEntity.ok(service.findAll(pageable))
     }
 
     @GetMapping(

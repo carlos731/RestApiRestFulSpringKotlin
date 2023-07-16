@@ -38,8 +38,8 @@ class PersonControllerXmlTest : AbstractIntegrationTest() {
     @Order(0)
     fun testLogin() {
         val user = AccountCredentialsVO(
-            username = "leandro",
-            password = "admin123"
+            username = "carlos",
+            password = "Kotlin@1234"
         )
 
         val token = RestAssured.given()
