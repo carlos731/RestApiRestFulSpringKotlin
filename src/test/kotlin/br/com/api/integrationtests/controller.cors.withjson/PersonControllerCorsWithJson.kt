@@ -1,7 +1,9 @@
 package br.com.api.integrationtests.controller.cors.withjson
 import br.com.api.integrationtests.TestConfigs
 import br.com.api.integrationtests.testcontainers.AbstractIntegrationTest
+import br.com.api.integrationtests.vo.AccountCredentialsVO
 import br.com.api.integrationtests.vo.PersonVO
+import br.com.api.integrationtests.vo.TokenVO
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.restassured.RestAssured.given
@@ -23,12 +25,37 @@ class PersonControllerCorsWithJson() : AbstractIntegrationTest() {
 	private lateinit var specification: RequestSpecification
 	private lateinit var objectMapper: ObjectMapper
 	private lateinit var person: PersonVO
+	private lateinit var token: String
 
 	@BeforeAll
 	fun setupTests(){
 		objectMapper = ObjectMapper()
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 		person = PersonVO()
+		token = ""
+	}
+
+	@Test
+	@Order(0)
+	fun authorization(){
+		val user = AccountCredentialsVO(
+			username = "carlos",
+			password = "Kotlin@1234"
+		)
+
+		token = given()
+				.basePath("/auth/signin")
+				.port(TestConfigs.SERVER_PORT)
+					.contentType(TestConfigs.CONTENT_TYPE_JSON)
+					.body(user)
+				.`when`()
+					.post()
+						.then()
+					.statusCode(200)
+						.extract()
+						.body()
+						.`as`(TokenVO::class.java)
+						.accessToken!!
 	}
 
 	@Test
@@ -40,6 +67,10 @@ class PersonControllerCorsWithJson() : AbstractIntegrationTest() {
 			.addHeader(
 				TestConfigs.HEADER_PARAM_ORIGIN,
 				TestConfigs.ORIGIN_CARLOS
+			)
+			.addHeader(
+				TestConfigs.HEADER_PARAM_AUTHORIZATION,
+				"Bearer $token"
 			)
 			.setBasePath("/api/person/v1")
 			.setPort(TestConfigs.SERVER_PORT)
