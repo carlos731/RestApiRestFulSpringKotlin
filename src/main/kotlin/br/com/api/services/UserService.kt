@@ -23,7 +23,7 @@ class UserService(@field:Autowired var repository: UserRepository) : UserDetails
     private val logger = Logger.getLogger(UserService::class.java.name)
 
     override fun loadUserByUsername(username: String?): UserDetails {
-        logger.info("Finding one BookVO Username $username!")
+        logger.info("Usuário logado: $username!")
         val user = repository.findByUsername(username)
         return user ?: throw UsernameNotFoundException("Username $username not found")
     }

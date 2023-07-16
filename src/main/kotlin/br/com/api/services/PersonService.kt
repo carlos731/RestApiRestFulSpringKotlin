@@ -9,6 +9,7 @@ import br.com.api.mapper.DozerMapper
 import br.com.api.mapper.custom.PersonMapper
 import br.com.api.model.Person
 import br.com.api.repository.PersonRepository
+import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
@@ -76,6 +77,18 @@ class PersonService {
         entity.address = personVO.address
         entity.gender = personVO.gender
         val person: PersonVO = DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.id).withSelfRel()
+        personVO.add(withSelfRel)
+        return personVO
+    }
+
+    @Transactional
+    fun disablePerson(id: Long): PersonVO {
+        logger.info("disabling one PersonVO with ID $id!")
+        repository.disablePerson(id)
+        var person =  repository.findById(id)
+            .orElseThrow { ResourceNotFoundException("No records found for this ID!")}
+        val personVO: PersonVO = DozerMapper.parseObject(person, PersonVO::class.java)
         val withSelfRel = linkTo(PersonController::class.java).slash(personVO.id).withSelfRel()
         personVO.add(withSelfRel)
         return personVO

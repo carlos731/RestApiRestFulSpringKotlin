@@ -19,4 +19,5 @@ data class PersonVO (
     var address: String = "",
     //@field:JsonIgnore
     var gender: String = "",
+    var enabled: Boolean = true
 ): RepresentationModel<PersonVO>()

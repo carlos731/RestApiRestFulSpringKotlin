@@ -41,8 +41,8 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
     @Order(0)
     fun testLogin() {
         val user = AccountCredentialsVO(
-            username = "carlos",
-            password = "Kotlin@1234"
+            username = "leandro",
+            password = "admin123"
         )
 
         val token = RestAssured.given()
@@ -55,24 +55,24 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
                     )
             )
             .basePath("/auth/signin")
-                .port(TestConfigs.SERVER_PORT)
-                .contentType(TestConfigs.CONTENT_TYPE_YML)
-                .body(user, objectMapper)
+            .port(TestConfigs.SERVER_PORT)
+            .contentType(TestConfigs.CONTENT_TYPE_YML)
+            .body(user, objectMapper)
             .`when`()
             .post()
-                .then()
-                    .statusCode(200)
-                        .extract()
-                    .body()
-                        .`as`(TokenVO::class.java, objectMapper)
-                            .accessToken
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .`as`(TokenVO::class.java, objectMapper)
+            .accessToken
 
         specification = RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer $token")
-                .setBasePath("/api/person/v1")
+            .setBasePath("/api/person/v1")
             .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(ResponseLoggingFilter(LogDetail.ALL))
+            .addFilter(RequestLoggingFilter(LogDetail.ALL))
+            .addFilter(ResponseLoggingFilter(LogDetail.ALL))
             .build()
     }
 
@@ -113,6 +113,7 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
         assertEquals("Stallman", item.lastName)
         assertEquals("New York City, New York, US", item.address)
         assertEquals("Male", item.gender)
+        assertEquals(true, item.enabled)
     }
 
     @Test
@@ -152,10 +153,41 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
         assertEquals("Matthew Stallman", item.lastName)
         assertEquals("New York City, New York, US", item.address)
         assertEquals("Male", item.gender)
+        assertEquals(true, item.enabled)
     }
 
     @Test
     @Order(3)
+    fun testDisablePersonById() {
+        val item = given()
+            .spec(specification)
+            .contentType(TestConfigs.CONTENT_TYPE_YML)
+            .pathParam("id", person.id)
+            .`when`()
+            .patch("{id}")
+            .then()
+            .statusCode(200)
+            .extract()
+            .body()
+            .`as`(PersonVO::class.java, objectMapper)
+
+        person = item
+
+        assertNotNull(item.id)
+        assertNotNull(item.firstName)
+        assertNotNull(item.lastName)
+        assertNotNull(item.address)
+        assertNotNull(item.gender)
+        assertEquals(person.id, item.id)
+        assertEquals("Richard", item.firstName)
+        assertEquals("Matthew Stallman", item.lastName)
+        assertEquals("New York City, New York, US", item.address)
+        assertEquals("Male", item.gender)
+        assertEquals(false, item.enabled)
+    }
+
+    @Test
+    @Order(4)
     fun testFindById() {
         val item = given()
             .config(
@@ -189,10 +221,11 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
         assertEquals("Matthew Stallman", item.lastName)
         assertEquals("New York City, New York, US", item.address)
         assertEquals("Male", item.gender)
+        assertEquals(false, item.enabled)
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     fun testDelete() {
         given()
             .spec(specification)
@@ -204,7 +237,7 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     fun testFindAll() {
         val people = given()
             .config(
@@ -236,6 +269,7 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
         assertEquals("Senna", item1.lastName)
         assertEquals("São Paulo", item1.address)
         assertEquals("Male", item1.gender)
+        assertEquals(true, item1.enabled)
 
         val item2 = people[6]
 
@@ -248,18 +282,19 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
         assertEquals("Tesla", item2.lastName)
         assertEquals("Smiljan - Croatia", item2.address)
         assertEquals("Male", item2.gender)
+        assertEquals(true, item2.enabled)
     }
 
 
     @Test
-    @Order(5)
+    @Order(7)
     fun testFindAllWithoutToken() {
 
         val specificationWithoutToken: RequestSpecification = RequestSpecBuilder()
             .setBasePath("/api/person/v1")
             .setPort(TestConfigs.SERVER_PORT)
-                .addFilter(RequestLoggingFilter(LogDetail.ALL))
-                .addFilter(ResponseLoggingFilter(LogDetail.ALL))
+            .addFilter(RequestLoggingFilter(LogDetail.ALL))
+            .addFilter(ResponseLoggingFilter(LogDetail.ALL))
             .build()
 
         given()
@@ -288,6 +323,7 @@ class PersonControllerYmlTest : AbstractIntegrationTest() {
         person.lastName = "Stallman"
         person.address = "New York City, New York, US"
         person.gender = "Male"
+        person.enabled = true
     }
 
 }
