@@ -105,7 +105,7 @@ class PersonController {
     @Operation(
         summary = "Find Person By name",
         description = "Recupera uma pessoa através do seu nome.",
-        tags = ["Person"],
+        tags = ["People"],
         responses = [
             ApiResponse(
                 description = "Success",
